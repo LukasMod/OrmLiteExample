@@ -2,6 +2,7 @@ package pl.ormlite.example;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class Main {
 
@@ -59,23 +61,109 @@ public class Main {
         book.setBorrowed(true);
         book.setPrice(33.99);
 
+        Book book2 = new Book();
+        book2.setTitle("Krew Elfów");
+        book2.setIsbn("22222");
+        book2.setAddedDate(new Date());
+
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy/MM/dd");
+        String dateInString2 = "2011/10/09";
+        Date date2 = sdf.parse(dateInString);
+
+        book2.setDateRelease(date);
+        book2.setRating("4");
+//        book2.setBorrowed();  //przyjmie domyślną (false)
+        book2.setPrice(12.99);
+
+        Book book3 = new Book();
+        book3.setTitle("Metro");
+        book3.setIsbn("33333");
+        book3.setAddedDate(new Date());
+
+        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy/MM/dd");
+        String dateInString3 = "2017/05/06";
+        Date date3 = sdf.parse(dateInString);
+
+        book3.setDateRelease(date);
+        book3.setRating("3");
+        book3.setBorrowed(true);
+        book3.setPrice(50.99);
+
         Dao<Book, Integer> dao = DaoManager.createDao(connectionSource, Book.class);
 //Dao<Parametr klasy, ID>
+
+
+//        System.out.println(book);
+//
+//        //zmiana wybranej wartości z pozycji
+//        book.setTitle("Hobbit");
+//        dao.update(book);
+//        System.out.println("After update: " + book.getTitle());
+//
+//        //niszczenie obiektu
+//        dao.delete(book);
+//        System.out.println("After delete " + book);
+//
+//        //wyszukiwanie, jeśli nie znajdzie, zwroci Nulla
+//      book = dao.queryForId(book.getId());
+//        System.out.println("After query " + book);
+
+
         dao.create(book);
-        System.out.println(book);
+        dao.create(book2);
+        dao.create(book3);
 
-        //zmiana wybranej wartości z pozycji
-        book.setTitle("Hobbit");
-        dao.update(book);
-        System.out.println("After update: " + book.getTitle());
+        // '*'  oznacza wszystko. Wybierz wszystko z książek (nazwa bazy danych)
+        //Tworzy listę zawierającą tablicę Stringów
+        GenericRawResults<String[]> rawResults = dao.queryRaw("SELECT * FROM books");
+        //z tego obiektu ^^ wyciągamy wynik
+        List<String[]> result = rawResults.getResults();
+        result.forEach(e -> {
+            for (String s : e) {
+                System.out.println(s);   //wypisuje wszystkie książki
+            }
+        });
 
-        //niszczenie obiektu
-        dao.delete(book);
-        System.out.println("After delete " + book);
+        System.out.println();
+        System.out.println();
+        GenericRawResults<String[]> where = dao.queryRaw("SELECT * FROM books WHERE title = 'Metro'");
+        //z tego obiektu ^^ wyciągamy wynik
+        List<String[]> resultsWhere = where.getResults();
+        resultsWhere.forEach(e -> {
+            for (String s : e) {
+                System.out.println(s);   //wypisuje wszystkie książki
+            }
+        });
+        System.out.println();
+        System.out.println();
+        GenericRawResults<String[]> selectMinMax = dao.queryRaw("SELECT MIN(price), MAX(price) FROM books");
+        //z tego obiektu ^^ wyciągamy wynik
+        List<String[]> resultsMinMax = selectMinMax.getResults();
+        resultsMinMax.forEach(e -> {
+            for (String s : e) {
+                System.out.println(s);   //wypisuje wszystkie książki
+            }
+        });
+        System.out.println();
+        System.out.println();
+        GenericRawResults<String[]> selectCount = dao.queryRaw("SELECT count(*) FROM books where borrowed = 1");
+        //sqlite obsługuje boolean jako 0 / 1, ale H2 już rozróżnia false / true
+        //z tego obiektu ^^ wyciągamy wynik
+        List<String[]> resultsCount = selectCount.getResults();
+        resultsCount.forEach(e -> {
+            for (String s : e) {
+                System.out.println(s);   //wypisuje wszystkie książki
+            }
+        });
+        System.out.println();
+        System.out.println();
 
-        //wyszukiwanie, jeśli nie znajdzie, zwroci Nulla
-      book = dao.queryForId(book.getId());
-        System.out.println("After query " + book);
+        //Inny sposób zapytania OrmLite
+        double maxUnits = dao.queryRawValue("select AVG(price) from books");
+        System.out.println(maxUnits);
+
+
+
 
         connectionSource.close();  //zamyka połączenie z bazą danych, odciąża pamięć
     }
