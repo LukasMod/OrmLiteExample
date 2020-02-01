@@ -14,9 +14,11 @@ public class Book {
     public Book() {
     }
 
-//    //ID w tabeli (niepowtarzające się)
-//    @DatabaseField(generatedId = true)
-//    private int id;
+
+
+    //ID w tabeli (niepowtarzające się)
+    @DatabaseField(generatedId = true)
+    private int id;
 
     @DatabaseField(columnName = "TITLE", canBeNull = false) //nigdy nie może być nullem
     private String title;
@@ -105,6 +107,14 @@ public class Book {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

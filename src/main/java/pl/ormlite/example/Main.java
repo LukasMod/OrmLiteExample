@@ -22,7 +22,7 @@ public class Main {
         // String databaseUrl = "jdbc:h2:mem:account";
 
 
-         String databaseUrlH2 = "jdbc:h2:./database";  //ścieżka do bazy danych H2 w katalogu głównym
+        // String databaseUrlH2 = "jdbc:h2:./database";  //ścieżka do bazy danych H2 w katalogu głównym
         //Baza H2 wymaga dodania do POM dependency nowych
         // ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrlH2);
 //
@@ -35,7 +35,7 @@ public class Main {
 //        accountDao.create(account);
 
         String databaseUrl = "jdbc:sqlite:database.db";  //ścieżka do bazy danych w katalogu głównym
-        ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrlH2);
+        ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl);
 
 
         //najpierw usuwa tabele, pozniej tworzy nowe. 'true' na koncu pomija bledy
@@ -59,9 +59,24 @@ public class Main {
         book.setBorrowed(true);
         book.setPrice(33.99);
 
-        Dao<Book, ?> dao = DaoManager.createDao(connectionSource, Book.class);
-
+        Dao<Book, Integer> dao = DaoManager.createDao(connectionSource, Book.class);
+//Dao<Parametr klasy, ID>
         dao.create(book);
+        System.out.println(book);
+
+        //zmiana wybranej wartości z pozycji
+        book.setTitle("Hobbit");
+        dao.update(book);
+        System.out.println("After update: " + book.getTitle());
+
+        //niszczenie obiektu
+        dao.delete(book);
+        System.out.println("After delete " + book);
+
+        //wyszukiwanie, jeśli nie znajdzie, zwroci Nulla
+      book = dao.queryForId(book.getId());
+        System.out.println("After query " + book);
+
         connectionSource.close();  //zamyka połączenie z bazą danych, odciąża pamięć
     }
 
