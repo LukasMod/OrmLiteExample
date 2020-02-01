@@ -18,24 +18,29 @@ public class Main {
         // String databaseUrl = "jdbc:h2:mem:account";
 
 
-        String databaseUrl = "jdbc:sqlite:database.db";  //ścieżka do bazy danych w katalogu głównym
-        String databaseUrlH2 = "jdbc:H2:./database";  //ścieżka do bazy danych H2 w katalogu głównym
 
-// create a connection source to our database
-        ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl);
-
+       // String databaseUrlH2 = "jdbc:H2:./database";  //ścieżka do bazy danych H2 w katalogu głównym
         //Baza H2 wymaga dodania do POM dependency nowych
         // ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrlH2);
-
-
+//
 // instantiate the DAO to handle Account with String id
-        Dao<Account, String> accountDao = DaoManager.createDao(connectionSource, Account.class);
-        TableUtils.createTable(connectionSource, Account.class);
+//        Dao<Account, String> accountDao = DaoManager.createDao(connectionSource, Account.class);
+//        TableUtils.createTable(connectionSource, Account.class);
+//        Account account = new Account();
+//        account.setName("Jimi");
+//        account.setPassword("1234");
+//        accountDao.create(account);
 
-        Account account = new Account();
-        account.setName("Jimi");
-        account.setPassword("1234");
-        accountDao.create(account);
+        String databaseUrl = "jdbc:sqlite:database.db";  //ścieżka do bazy danych w katalogu głównym
+        ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl);
+
+
+        //najpierw usuwa tabele, pozniej tworzy nowe. 'true' na koncu pomija bledy
+        // na wypadek usuniecia tabeli ktora nie istnieje
+        TableUtils.dropTable(connectionSource, Book.class, true);
+        //chroni przed nadpisaniem tablicy, chroni przed wyjatkiem jesli tabela istnieje
+        TableUtils.createTableIfNotExists(connectionSource, Book.class);
+      //  TableUtils.createTable(connectionSource, Book.class);
 
         connectionSource.close();  //zamyka połączenie z bazą danych, odciąża pamięć
     }
