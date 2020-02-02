@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 public class MainForeignFields {
@@ -76,7 +75,7 @@ public class MainForeignFields {
         book.setPrice(33.99);
 
         //dodajemy autora do bazy danych i nadajemy ID
-      //  daoAuthor.create(author);
+        //  daoAuthor.create(author);
         // - nie trzeba, z uwagi na dodatkowe parametry w klasie Book( foreignAutoRefresh i Create)
 
         //przypisujemy książce autora
@@ -93,6 +92,43 @@ public class MainForeignFields {
         // daoAuthor.refresh(book2.getAuthor());
         // - nie trzeba, z uwagi na dodatkowe parametry w klasie Book( foreignAutoRefresh i Create)
         System.out.println("Po zapytaniu do bazy danych " + book2);
+
+
+        book2.getAuthor().setName("Nieznany");
+        daoAuthor.createOrUpdate(book2.getAuthor());
+        book2 = daoBooks.queryForId(1);
+        System.out.println("Po zmianie autora " + book2);
+
+        author = daoAuthor.queryForId(1);
+        author.getBooks().forEach(e -> {
+            e.setTitle("Blablabla");
+            try {
+                daoBooks.createOrUpdate(e);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
+        daoAuthor.refresh(author);
+        author.getBooks().forEach(e -> {
+            System.out.println("Zmiana tytułu:  " + e);
+        });
+
+
+        Book book3 = new Book();
+        book3.setTitle("Metro");
+        book3.setIsbn("33333");
+        book3.setAddedDate(new Date());
+        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy/MM/dd");
+        String dateInString3 = "2017/05/06";
+        Date date3 = sdf3.parse(dateInString3);
+        book3.setDateRelease(date3);
+        book3.setRating("3");
+        book3.setBorrowed(true);
+        book3.setPrice(50.99);
+
+        author.getBooks().add(book3);
+        daoAuthor.createOrUpdate(author);
+
 
 //        dao.create(book);
 //        dao.create(book2);
