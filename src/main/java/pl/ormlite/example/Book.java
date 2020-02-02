@@ -14,7 +14,12 @@ public class Book {
     public Book() {
     }
 
-
+    // TWORZYMY POLE OBCE
+@DatabaseField (columnName = "AUTHOR_ID", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+private Author author;
+    //utworzy się kolumna z nazwą author_id. Lepiej nazwąć jawną naze, aby uniknąć pomyłek
+    //foreignAutoCreate - pomagają w obsłudze
+    //foreignAutoRefresh - pomagają w obsłudze
 
     //ID w tabeli (niepowtarzające się)
     @DatabaseField(generatedId = true)
@@ -117,10 +122,20 @@ public class Book {
         this.id = id;
     }
 
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
-                "title='" + title + '\'' +
+                "author=" + author +
+                ", id=" + id +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", isbn='" + isbn + '\'' +
                 ", addedDate=" + addedDate +
