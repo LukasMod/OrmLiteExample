@@ -1,11 +1,12 @@
-package pl.ormlite.example;
+package pl.ormlite.example.Main;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import org.h2.jdbc.JdbcConnection;
+import pl.ormlite.example.Model.Author;
+import pl.ormlite.example.Model.Book;
 
 import java.io.IOException;
 import java.sql.SQLException;

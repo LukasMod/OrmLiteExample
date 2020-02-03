@@ -1,4 +1,4 @@
-package pl.ormlite.example;
+package pl.ormlite.example.Main;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import pl.ormlite.example.Model.Book;
 
 import java.io.IOException;
 
@@ -29,7 +30,7 @@ public class Main {
         // ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrlH2);
 //
 // instantiate the DAO to handle Account with String id
-//        Dao<Account, String> accountDao = DaoManager.createDao(connectionSource, Account.class);
+//        pl.ormlite.example.Dao<Account, String> accountDao = DaoManager.createDao(connectionSource, Account.class);
 //        TableUtils.createTable(connectionSource, Account.class);
 //        Account account = new Account();
 //        account.setName("Jimi");
@@ -90,7 +91,7 @@ public class Main {
         book3.setPrice(50.99);
 
         Dao<Book, Integer> dao = DaoManager.createDao(connectionSource, Book.class);
-//Dao<Parametr klasy, ID>
+//pl.ormlite.example.Dao<Parametr klasy, ID>
 
 
 //        System.out.println(book);

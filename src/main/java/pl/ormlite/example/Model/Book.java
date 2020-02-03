@@ -1,4 +1,4 @@
-package pl.ormlite.example;
+package pl.ormlite.example.Model;
 
 
 import com.j256.ormlite.field.DataType;
@@ -8,7 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.util.Date;
 
 @DatabaseTable(tableName = "books")
-public class Book {
+public class Book implements BaseModel{
 
 //bezparametrowy konstruktor Alt+Insert
     public Book() {
